@@ -9,13 +9,15 @@ root = tree.getroot()
 print("Root tag:", root.tag)
 
 # Loop through elements
-for employee in root.findall("employee"):
-    emp_id = employee.get("id")
-    name = employee.find("name").text
-    department = employee.find("department").text
-    salary = employee.find("salary").text
+def add_explorer(fileapth):
+    
+    for employee in root.findall("employee"):
+        emp_id = employee.get("id")
+        name = employee.find("name").text
+        department = employee.find("department").text
+        salary = employee.find("salary").text
 
-    print(f"ID: {emp_id}, Name: {name}, Department: {department}, Salary: {salary}")
+        print(f"ID: {emp_id}, Name: {name}, Department: {department}, Salary: {salary}")
 
 
 # Parse Excel Using Pandas
@@ -34,3 +36,8 @@ print(df["Name"])
 # Iterate through rows
 for index, row in df.iterrows():
     print(row["ID"], row["Name"], row["Department"], row["Salary"])
+
+# MAIN
+
+if__name__ == '__main__':
+    add_explorer()
