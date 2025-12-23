@@ -16,3 +16,21 @@ for employee in root.findall("employee"):
     salary = employee.find("salary").text
 
     print(f"ID: {emp_id}, Name: {name}, Department: {department}, Salary: {salary}")
+
+
+# Parse Excel Using Pandas
+
+import pandas as pd
+
+# Read Excel file
+df = pd.read_excel("employees.xlsx")
+
+# Show first rows
+print(df.head())
+
+# Access columns
+print(df["Name"])
+
+# Iterate through rows
+for index, row in df.iterrows():
+    print(row["ID"], row["Name"], row["Department"], row["Salary"])
