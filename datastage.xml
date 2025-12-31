@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <DataStageJobInventory>
-
     <Job>
         <JobID>DSJ-001</JobID>
         <JobName>Load_Customer_Dim</JobName>
@@ -16,6 +14,7 @@
             <System>EDW</System>
             <Type>Teradata</Type>
         </Target>
+        
 
         <TechnicalDetails>
             <Transformations>Lookup, Derivation</Transformations>
@@ -42,12 +41,4 @@
 
         <Remarks>Straightforward dimension job</Remarks>
     </Job>
-
-    <Job>
-        <JobID>DSJ-003</JobID>
-        <JobName>Load_Sales_Fact</JobName>
-        <JobType>Parallel</JobType>
-        <Category>Fact Load</Category>
-
-        <Source>
-            <System>Oracle</System>
+</DataStageJobInventory>
