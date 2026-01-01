@@ -1,42 +1,154 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<DataStageJobInventory>
-    <Job>
-        <JobID>DSJ-001</JobID>
-        <JobName>Load_Customer_Dim</JobName>
-        <JobType>Parallel</JobType>
-        <Category>Dimension Load</Category>
+<DataStageInventory generatedOn="2026-01-01" toolVersion="IBM DataStage">
 
-        <Source>
-            <System>Oracle</System>
-            <Type>RDBMS</Type>
-        </Source>
+    <Project
+        projectName="FINANCE_ETL"
+        environment="DEV"
+        platform="On-Prem"
+        sourceSystem="IBM DataStage">
 
-        <Target>
-            <System>EDW</System>
-            <Type>Teradata</Type>
-        </Target>
+        <!-- ===================== -->
+        <!-- JOB INVENTORY SECTION -->
+        <!-- ===================== -->
 
-        <TechnicalDetails>
-            <Transformations>Lookup, Derivation</Transformations>
-            <StagesUsed>PX Oracle, Transformer</StagesUsed>
-        </TechnicalDetails>
+        <Job
+            jobId="JOB_001"
+            jobName="Load_Customer_Dim"
+            jobCategory="Dimensions"
+            jobType="Parallel"
+            jobStatus="Compiled"
+            jobEnabled="Yes"
+            developer="JSmith"
+            lastModified="2025-12-15"
+            schedule="Daily"
+            frequency="Daily"
+            criticality="High"
+            wave="Wave-1"
+            targetPlatform="Azure Synapse">
 
-        <Operations>
-            <Dependencies>SEQ_DAILY_LOAD</Dependencies>
-            <SchedulingTool>Control-M</SchedulingTool>
-            <Frequency>Daily</Frequency>
-            <AverageRuntimeMinutes>12</AverageRuntimeMinutes>
-            <DataVolume>Medium</DataVolume>
-        </Operations>
+            <Description>
+                Loads customer dimension data from source flat files into the EDW.
+            </Description>
 
-        <Migration>
-            <TargetPlatform>IDMC</TargetPlatform>
-            <Readiness>Ready</Readiness>
-            <EstimatedEffortDays>5</EstimatedEffortDays>
-            <MigrationWave>Wave 1</MigrationWave>
-            <RiskLevel>Low</RiskLevel>
-        </Migration>
+            <Sources>
+                <Source system="CRM" objectName="CUSTOMER_FILE" objectType="FlatFile"/>
+            </Sources>
 
-        <Remarks>Customer dimension load</Remarks>
-    </Job>
-</DataStageJobInventory>
+            <Targets>
+                <Target system="EDW" objectName="DIM_CUSTOMER" objectType="Table"/>
+            </Targets>
+
+            <!-- ================= -->
+            <!-- STAGE INVENTORY -->
+            <!-- ================= -->
+
+            <Stages>
+
+                <Stage
+                    stageId="STG_01"
+                    stageName="SRC_CUSTOMER"
+                    stageType="SequentialFile"
+                    stageCategory="Source"
+                    technology="File"
+                    parallelism="Yes"/>
+
+                <Stage
+                    stageId="STG_02"
+                    stageName="TR_CLEANSE"
+                    stageType="Transformer"
+                    stageCategory="Transformation"
+                    technology="DataStage"
+                    parallelism="Yes"/>
+
+                <Stage
+                    stageId="STG_03"
+                    stageName="TGT_CUSTOMER_DIM"
+                    stageType="ODBCConnector"
+                    stageCategory="Target"
+                    technology="Database"
+                    parallelism="Yes"/>
+
+            </Stages>
+
+            <!-- ================= -->
+            <!-- LINK INVENTORY -->
+            <!-- ================= -->
+
+            <Links>
+
+                <Link
+                    linkName="LNK_SRC_TO_TR"
+                    fromStage="SRC_CUSTOMER"
+                    toStage="TR_CLEANSE"
+                    linkType="Data"/>
+
+                <Link
+                    linkName="LNK_TR_TO_TGT"
+                    fromStage="TR_CLEANSE"
+                    toStage="TGT_CUSTOMER_DIM"
+                    linkType="Data"/>
+
+            </Links>
+
+            <!-- ================= -->
+            <!-- PARAMETER INVENTORY -->
+            <!-- ================= -->
+
+            <Parameters>
+
+                <Parameter
+                    name="p_Source_Path"
+                    type="String"
+                    defaultValue="/data/input/customers"/>
+
+                <Parameter
+                    name="p_Run_Date"
+                    type="Date"
+                    defaultValue="$$TODAY"/>
+
+            </Parameters>
+
+        </Job>
+
+        <!-- ===================== -->
+        <!-- SECOND JOB -->
+        <!-- ===================== -->
+
+        <Job
+            jobId="JOB_002"
+            jobName="Load_Sales_Fact"
+            jobCategory="Facts"
+            jobType="Parallel"
+            jobStatus="Compiled"
+            jobEnabled="Yes"
+            developer="ABabalola"
+            lastModified="2025-12-20"
+            schedule="Hourly"
+            frequency="Hourly"
+            criticality="Medium"
+            wave="Wave-2"
+            targetPlatform="Azure Data Factory">
+
+            <Description>
+                Loads aggregated sales data into fact tables.
+            </Description>
+
+            <Sources>
+                <Source system="POS" objectName="SALES_TRANSACTIONS" objectType="Table"/>
+            </Sources>
+
+            <Targets>
+                <Target system="EDW" objectName="FACT_SALES" objectType="Table"/>
+            </Targets>
+
+            <Stages>
+                <Stage stageId="STG_04" stageName="SRC_SALES" stageType="ODBCConnector" stageCategory="Source"/>
+                <Stage stageId="STG_05" stageName="TR_AGGREGATE" stageType="Transformer" stageCategory="Transformation"/>
+                <Stage stageId="STG_06" stageName="TGT_SALES_FACT" stageType="ODBCConnector" stageCategory="Target"/>
+            </Stages>
+
+        </Job>
+
+    </Project>
+
+</DataStageInventory>
