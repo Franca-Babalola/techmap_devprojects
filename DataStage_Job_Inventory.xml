@@ -1,0 +1,16 @@
+<DataStageInventory>
+    <Job name="JOB_CUSTOMER_LOAD" type="Parallel">
+        <Parameter name="SRC_DB" default="ORACLE"/>
+        <Parameter name="TGT_DB" default="SNOWFLAKE"/>
+
+        <Stage name="SRC_CUSTOMER" type="OracleConnector">
+            <Link name="LNK_SRC_TO_TRX" direction="Output"/>
+        </Stage>
+
+        <Stage name="TRX_CUSTOMER" type="Transformer">
+            <Link name="LNK_TRX_TO_TGT" direction="Output"/>
+        </Stage>
+
+        <Stage name="TGT_CUSTOMER" type="SnowflakeConnector"/>
+    </Job>
+</DataStageInventory>
