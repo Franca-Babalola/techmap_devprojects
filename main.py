@@ -34,3 +34,8 @@ print(df["Name"])
 # Iterate through rows
 for index, row in df.iterrows():
     print(row["ID"], row["Name"], row["Department"], row["Salary"])
+
+# MAIN
+
+if__name__ == '__main__':
+    add_explorer()
